@@ -26,6 +26,14 @@
 :root {
     background-color: #1C1682;
 }
+.map.png {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 5%;
+    margin: auto 20px;
+}
 
 .flex-container {
     display: flex;
