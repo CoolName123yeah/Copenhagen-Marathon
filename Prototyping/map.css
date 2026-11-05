@@ -1,0 +1,84 @@
+@font-face {
+    font-family: Londona;
+    src: url(fonts/Londona.otf);
+}
+
+@font-face {
+    font-family: Monserrat-Light;
+    src: url(fonts/Montserrat-Light.otf);
+}
+
+@font-face {
+    font-family: Monserrat-Medium;
+    src: url(fonts/Montserrat-Medium.otf);
+}
+
+@font-face {
+    font-family: Monserrat-Regular;
+    src: url(fonts/Montserrat-Regular.otf);
+}
+
+@font-face {
+    font-family: Monserrat-SemiBold;
+    src: url(fonts/Montserrat-SemiBold.otf);
+}
+
+:root {
+    background-color: #FFE000;
+    overflow: hidden;
+}
+
+.fullscreen {
+    height: 100dvh;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+} 
+
+.icon-wrapper {
+    position: relative;
+    height: 100%;
+    width: fit-content;
+}
+
+.map {
+    height: 100%;
+    width: auto;
+    max-width: none;
+    display: block;
+    opacity: 75%;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.header {
+    color: cornflowerblue;
+    letter-spacing: 3px;
+    font-family: Londona, Montserrat-Regular;
+    font-size: 100px;
+}
+
+.map-icon {
+    width: 3%;
+    position: absolute;
+    height: auto;
+}
+
+.location {
+    top: 45%;
+    left: 40%;
+    position: absolute;
+    height: auto;
+    width: 10%;
+}
+
+.toilet-icon1 {
+    top: 30%;
+    left: 30%;
+}
