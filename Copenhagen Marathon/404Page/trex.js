@@ -1,12 +1,3 @@
-function hideClass(name) {
-       var myClasses = document.querySelectorAll(name),
-      i = 0,
-      l = myClasses.length;
-
-      for (i; i < l; i++) {
-        myClasses[i].style.display = 'none';
-      }
-	}
     // Copyright (c) 2014 The Chromium Authors. All rights reserved.
     // Use of this source code is governed by a BSD-style license that can be
     // found in the LICENSE file.
@@ -27,7 +18,6 @@ function hideClass(name) {
     Runner.instance_ = this;
     this.outerContainerEl = document.querySelector(outerContainerId);
     this.containerEl = null;
-    this.detailsButton = this.outerContainerEl.querySelector('#details-button');
     this.config = opt_config || Runner.config;
     this.dimensions = Runner.defaultDimensions;
     this.canvas = null;
@@ -46,9 +36,9 @@ function hideClass(name) {
     this.crashed = false;
     this.paused = false;
     this.resizeTimerId_ = null;
-    this.playCount = 0;
+    // True while the jump button / mouse is held down: keeps the runner jumping.
+    this.jumpHeld = false;
     // Sound FX.
-    this.audioBuffer = null;
     this.soundFx = {};
     // Global web audio context for playing sounds.
     this.audioContext = null;
@@ -75,30 +65,20 @@ function hideClass(name) {
     window.navigator.userAgent.indexOf('UIWebViewForStaticFileContent') > -1;
     /** @const */
     var IS_MOBILE = window.navigator.userAgent.indexOf('Mobi') > -1 || IS_IOS;
-    /** @const */
-    var IS_TOUCH_ENABLED = 'ontouchstart' in window;
     /**
     * Default game configuration.
     * @enum {number}
     */
     Runner.config = {
     ACCELERATION: 0.001,
-    BG_CLOUD_SPEED: 0.2,
     BOTTOM_PAD: 10,
     CLEAR_TIME: 3000,
-    CLOUD_FREQUENCY: 0.5,
     GAMEOVER_CLEAR_TIME: 750,
     GAP_COEFFICIENT: 0.6,
-    GRAVITY: 0.6,
-    INITIAL_JUMP_VELOCITY: 12,
-    MAX_CLOUDS: 6,
-    MAX_OBSTACLE_LENGTH: 3,
     MAX_SPEED: 12,
-    MIN_JUMP_HEIGHT: 35,
     MOBILE_SPEED_COEFFICIENT: 1.2,
     RESOURCE_TEMPLATE_ID: 'audio-resources',
-    SPEED: 6,
-    SPEED_DROP_COEFFICIENT: 3
+    SPEED: 6
     };
     /**
     * Default dimensions.
@@ -116,7 +96,6 @@ function hideClass(name) {
     CANVAS: 'runner-canvas',
     CONTAINER: 'runner-container',
     CRASHED: 'crashed',
-    ICON: 'icon-offline',
     TOUCH_CONTROLLER: 'controller'
     };
     /**
@@ -167,7 +146,6 @@ function hideClass(name) {
     */
     Runner.events = {
     ANIM_END: 'animationend',
-    CLICK: 'click',
     KEYDOWN: 'keydown',
     KEYUP: 'keyup',
     MOUSEDOWN: 'mousedown',
@@ -177,33 +155,9 @@ function hideClass(name) {
     TOUCHSTART: 'touchstart',
     VISIBILITY: 'visibilitychange',
     BLUR: 'blur',
-    FOCUS: 'focus',
-    LOAD: 'load'
+    FOCUS: 'focus'
     };
     Runner.prototype = {
-    /**
-    * Setting individual settings for debugging.
-    * @param {string} setting
-    * @param {*} value
-    */
-    updateConfigSetting: function(setting, value) {
-    if (setting in this.config && value != undefined) {
-    this.config[setting] = value;
-    switch (setting) {
-    case 'GRAVITY':
-    case 'MIN_JUMP_HEIGHT':
-    case 'SPEED_DROP_COEFFICIENT':
-    this.tRex.config[setting] = value;
-    break;
-    case 'INITIAL_JUMP_VELOCITY':
-    this.tRex.setJumpVelocity(value);
-    break;
-    case 'SPEED':
-    this.setSpeed(value);
-    break;
-    }
-    }
-    },
     /**
     * Load and cache the image assets from the page.
     */
@@ -256,8 +210,6 @@ function hideClass(name) {
     * Game initialiser.
     */
     init: function() {
-    // Hide the static icon.
-    //document.querySelector('.' + Runner.classes.ICON).style.visibility = 'hidden';
     this.adjustDimensions();
     this.setSpeed();
     this.containerEl = document.createElement('div');
@@ -266,8 +218,6 @@ function hideClass(name) {
     this.canvas = createCanvas(this.containerEl, this.dimensions.WIDTH,
     this.dimensions.HEIGHT, Runner.classes.PLAYER);
     this.canvasCtx = this.canvas.getContext('2d');
-    this.canvasCtx.fillStyle = '#f7f7f7';
-    this.canvasCtx.fill();
     Runner.updateCanvasScaling(this.canvas);
     // Horizon contains clouds, obstacles and the ground.
     this.horizon = new Horizon(this.canvas, this.images, this.dimensions,
@@ -326,7 +276,10 @@ function hideClass(name) {
     this.containerEl.style.width = this.dimensions.WIDTH + 'px';
     this.containerEl.style.height = this.dimensions.HEIGHT + 'px';
     this.distanceMeter.update(0, Math.ceil(this.distanceRan));
+    // Only freeze the loop if the game is already over; a running game keeps going.
+    if (this.crashed) {
     this.stop();
+    }
     } else {
     this.tRex.draw(0, 0);
     }
@@ -374,7 +327,6 @@ function hideClass(name) {
     this.playingIntro = false;
     this.tRex.playingIntro = false;
     this.containerEl.style.animation = '';
-    this.playCount++;
     // Handle tabbing off the page. Pause the current game.
     window.addEventListener(Runner.events.VISIBILITY,
     this.onVisibilityChange.bind(this));
@@ -399,6 +351,10 @@ function hideClass(name) {
     this.clearCanvas();
     if (this.tRex.jumping) {
     this.tRex.updateJump(deltaTime, this.config);
+    }
+    // Holding the button down: jump again as soon as the runner lands.
+    if (this.jumpHeld && !this.tRex.jumping && !this.crashed) {
+    this.tRex.startJump();
     }
     this.runningTime += deltaTime;
     var hasObstacles = this.runningTime > this.config.CLEAR_TIME;
@@ -477,32 +433,18 @@ function hideClass(name) {
     }
     },
     /**
-    * Remove all listeners.
-    */
-    stopListening: function() {
-    document.removeEventListener(Runner.events.KEYDOWN, this);
-    document.removeEventListener(Runner.events.KEYUP, this);
-    if (IS_MOBILE) {
-    this.touchController.removeEventListener(Runner.events.TOUCHSTART, this);
-    this.touchController.removeEventListener(Runner.events.TOUCHEND, this);
-    this.containerEl.removeEventListener(Runner.events.TOUCHSTART, this);
-    } else {
-    document.removeEventListener(Runner.events.MOUSEDOWN, this);
-    document.removeEventListener(Runner.events.MOUSEUP, this);
-    }
-    },
-    /**
     * Process keydown.
     * @param {Event} e
     */
     onKeyDown: function(e) {
-    if (e.target != this.detailsButton) {
     if (!this.crashed && (Runner.keycodes.JUMP[String(e.keyCode)] ||
-    e.type == Runner.events.TOUCHSTART)) {
+    e.type == Runner.events.TOUCHSTART ||
+    e.type == Runner.events.MOUSEDOWN)) {
     if (!this.activated) {
     this.loadSounds();
     this.activated = true;
     }
+    this.jumpHeld = true;
     if (!this.tRex.jumping) {
     this.playSound(this.soundFx.BUTTON_PRESS);
     this.tRex.startJump();
@@ -511,7 +453,6 @@ function hideClass(name) {
     if (this.crashed && e.type == Runner.events.TOUCHSTART &&
     e.currentTarget == this.containerEl) {
     this.restart();
-    }
     }
     // Speed drop, activated only when jump key is not pressed.
     if (Runner.keycodes.DUCK[e.keyCode] && this.tRex.jumping) {
@@ -527,7 +468,10 @@ function hideClass(name) {
     var keyCode = String(e.keyCode);
     var isjumpKey = Runner.keycodes.JUMP[keyCode] ||
     e.type == Runner.events.TOUCHEND ||
-    e.type == Runner.events.MOUSEDOWN;
+    e.type == Runner.events.MOUSEUP;
+    if (isjumpKey) {
+    this.jumpHeld = false;
+    }
     if (this.isRunning() && isjumpKey) {
     this.tRex.endJump();
     } else if (Runner.keycodes.DUCK[keyCode]) {
@@ -536,9 +480,8 @@ function hideClass(name) {
     // Check that enough time has elapsed before allowing jump key to restart.
     var deltaTime = getTimeStamp() - this.time;
     if (Runner.keycodes.RESTART[keyCode] ||
-    (e.type == Runner.events.MOUSEUP && e.target == this.canvas) ||
     (deltaTime >= this.config.GAMEOVER_CLEAR_TIME &&
-    Runner.keycodes.JUMP[keyCode])) {
+    (Runner.keycodes.JUMP[keyCode] || e.type == Runner.events.MOUSEUP))) {
     this.restart();
     }
     } else if (this.paused && isjumpKey) {
@@ -569,7 +512,12 @@ function hideClass(name) {
     vibrate(200);
     this.stop();
     this.crashed = true;
+    this.jumpHeld = false;
     this.distanceMeter.acheivement = false;
+    // Wipe the frame (it still contains the pre-crash runner sprite) and redraw
+    // the scene without the runner, so only the crashed pose is visible.
+    this.clearCanvas();
+    this.horizon.update(0, 0, true);
     this.tRex.update(100, Trex.status.CRASHED);
     // Game over panel.
     if (!this.gameOverPanel) {
@@ -604,7 +552,6 @@ function hideClass(name) {
     },
     restart: function() {
     if (!this.raqId) {
-    this.playCount++;
     this.runningTime = 0;
     this.activated = true;
     this.crashed = false;
@@ -625,6 +572,7 @@ function hideClass(name) {
     */
     onVisibilityChange: function(e) {
     if (document.hidden || document.webkitHidden || e.type == 'blur') {
+    this.jumpHeld = false;
     this.stop();
     } else {
     this.play();
@@ -817,12 +765,9 @@ function hideClass(name) {
     * Check for a collision.
     * @param {!Obstacle} obstacle
     * @param {!Trex} tRex T-rex object.
-    * @param {HTMLCanvasContext} opt_canvasCtx Optional canvas context for drawing
-    * collision boxes.
     * @return {Array.<CollisionBox>}
     */
-    function checkForCollision(obstacle, tRex, opt_canvasCtx) {
-    var obstacleBoxXPos = Runner.defaultDimensions.WIDTH + obstacle.xPos;
+    function checkForCollision(obstacle, tRex) {
     // Adjustments are made to the bounding box as there is a 1 pixel white
     // border around the t-rex and obstacles.
     var tRexBox = new CollisionBox(
@@ -835,10 +780,6 @@ function hideClass(name) {
     obstacle.yPos + 1,
     obstacle.typeConfig.width * obstacle.size - 2,
     obstacle.typeConfig.height - 2);
-    // Debug outer box
-    if (opt_canvasCtx) {
-    drawCollisionBoxes(opt_canvasCtx, tRexBox, obstacleBox);
-    }
     // Simple outer bounds check.
     if (boxCompare(tRexBox, obstacleBox)) {
     var collisionBoxes = obstacle.collisionBoxes;
@@ -852,10 +793,6 @@ function hideClass(name) {
     var adjObstacleBox =
     createAdjustedCollisionBox(collisionBoxes[i], obstacleBox);
     var crashed = boxCompare(adjTrexBox, adjObstacleBox);
-    // Draw boxes for debug.
-    if (opt_canvasCtx) {
-    drawCollisionBoxes(opt_canvasCtx, adjTrexBox, adjObstacleBox);
-    }
     if (crashed) {
     return [adjTrexBox, adjObstacleBox];
     }
@@ -876,19 +813,6 @@ function hideClass(name) {
     box.y + adjustment.y,
     box.width,
     box.height);
-    };
-    /**
-    * Draw the collision boxes for debug.
-    */
-    function drawCollisionBoxes(canvasCtx, tRexBox, obstacleBox) {
-    canvasCtx.save();
-    canvasCtx.strokeStyle = '#f00';
-    canvasCtx.strokeRect(tRexBox.x, tRexBox.y,
-    tRexBox.width, tRexBox.height);
-    canvasCtx.strokeStyle = '#0f0';
-    canvasCtx.strokeRect(obstacleBox.x, obstacleBox.y,
-    obstacleBox.width, obstacleBox.height);
-    canvasCtx.restore();
     };
     /**
     * Compare two collision boxes for a collision.
@@ -960,7 +884,7 @@ function hideClass(name) {
     * Maximum obstacle grouping count.
     * @const
     */
-    Obstacle.MAX_OBSTACLE_LENGTH = 3,
+    Obstacle.MAX_OBSTACLE_LENGTH = 3;
     Obstacle.prototype = {
     /**
     * Initialise the DOM for the obstacle.
@@ -1063,30 +987,28 @@ function hideClass(name) {
     Obstacle.types = [
     {
     type: 'CACTUS_SMALL',
-    className: ' cactus cactus-small ',
     width: 17,
     height: 35,
     yPos: 105,
     multipleSpeed: 3,
     minGap: 120,
     collisionBoxes: [
-    new CollisionBox(0, 7, 5, 27),
-    new CollisionBox(4, 0, 6, 34),
-    new CollisionBox(10, 4, 7, 14)
+    new CollisionBox(0, 3, 6, 32),
+    new CollisionBox(5, 3, 7, 8),
+    new CollisionBox(11, 3, 6, 32)
     ]
     },
     {
     type: 'CACTUS_LARGE',
-    className: ' cactus cactus-large ',
     width: 25,
     height: 50,
     yPos: 90,
     multipleSpeed: 6,
     minGap: 120,
     collisionBoxes: [
-    new CollisionBox(0, 12, 7, 38),
-    new CollisionBox(8, 0, 7, 49),
-    new CollisionBox(13, 10, 10, 38)
+    new CollisionBox(0, 3, 7, 47),
+    new CollisionBox(6, 3, 11, 26),
+    new CollisionBox(18, 3, 7, 47)
     ]
     }
     ];
@@ -1101,7 +1023,7 @@ function hideClass(name) {
     this.canvas = canvas;
     this.canvasCtx = canvas.getContext('2d');
     this.image = image;
-    this.xPos = 0;
+    this.xPos = Trex.config.START_X_POS;
     this.yPos = 0;
     // Position when on the ground.
     this.groundYPos = 0;
@@ -1119,7 +1041,6 @@ function hideClass(name) {
     this.reachedMinHeight = false;
     this.speedDrop = false;
     this.jumpCount = 0;
-    this.jumpspotX = 0;
     this.init();
     };
     /**
@@ -1135,7 +1056,6 @@ function hideClass(name) {
     MAX_JUMP_HEIGHT: 30,
     MIN_JUMP_HEIGHT: 30,
     SPEED_DROP_COEFFICIENT: 3,
-    SPRITE_WIDTH: 262,
     START_X_POS: 50,
     WIDTH: 44
     };
@@ -1144,12 +1064,9 @@ function hideClass(name) {
     * @type {Array.<CollisionBox>}
     */
     Trex.collisionBoxes = [
-    new CollisionBox(1, -1, 30, 26),
-    new CollisionBox(32, 0, 8, 16),
-    new CollisionBox(10, 35, 14, 8),
-    new CollisionBox(1, 24, 29, 5),
-    new CollisionBox(5, 30, 21, 4),
-    new CollisionBox(9, 34, 15, 4)
+    new CollisionBox(16, 0, 12, 12),   // head
+    new CollisionBox(10, 13, 24, 18),  // torso and arms
+    new CollisionBox(15, 31, 14, 15)   // legs
     ];
     /**
     * Animation states.
@@ -1201,14 +1118,6 @@ function hideClass(name) {
     this.minJumpHeight = this.groundYPos - this.config.MIN_JUMP_HEIGHT;
     this.draw(0, 0);
     this.update(0, Trex.status.WAITING);
-    },
-    /**
-    * Setter for the jump velocity.
-    * The approriate drop velocity is also set.
-    */
-    setJumpVelocity: function(setting) {
-    this.config.INIITAL_JUMP_VELOCITY = -setting;
-    this.config.DROP_VELOCITY = -setting / 2;
     },
     /**
     * Set the animation status.
@@ -1353,7 +1262,6 @@ function hideClass(name) {
     this.jumpVelocity = 0;
     this.jumping = false;
     this.update(0, Trex.status.RUNNING);
-    this.midair = false;
     this.speedDrop = false;
     this.jumpCount = 0;
     }
@@ -1375,7 +1283,6 @@ function hideClass(name) {
     this.currentDistance = 0;
     this.maxScore = 0;
     this.highScore = 0;
-    this.container = null;
     this.digits = [];
     this.acheivement = false;
     this.defaultString = '';
@@ -1577,7 +1484,6 @@ function hideClass(name) {
     this.canvas = canvas;
     this.canvasCtx = this.canvas.getContext('2d');
     this.image = cloudImg;
-    this.containerWidth = containerWidth;
     this.xPos = containerWidth;
     this.yPos = 0;
     this.remove = false;
@@ -1753,7 +1659,6 @@ function hideClass(name) {
     this.dimensions = dimensions;
     this.gapCoefficient = gapCoefficient;
     this.obstacles = [];
-    this.horizonOffsets = [0, 0];
     this.cloudFrequency = this.config.CLOUD_FREQUENCY;
     // Cloud
     this.clouds = [];
@@ -1775,9 +1680,7 @@ function hideClass(name) {
     */
     Horizon.config = {
     BG_CLOUD_SPEED: 0.2,
-    BUMPY_THRESHOLD: .3,
     CLOUD_FREQUENCY: .5,
-    HORIZON_HEIGHT: 16,
     MAX_CLOUDS: 20
     };
     Horizon.prototype = {
@@ -1796,7 +1699,6 @@ function hideClass(name) {
     * ease in section.
     */
     update: function(deltaTime, currentSpeed, updateObstacles) {
-    this.runningTime += deltaTime;
     this.horizonLine.update(deltaTime, currentSpeed);
     this.updateClouds(deltaTime, currentSpeed);
     if (updateObstacles) {
@@ -1878,15 +1780,6 @@ function hideClass(name) {
     reset: function() {
     this.obstacles = [];
     this.horizonLine.reset();
-    },
-    /**
-    * Update the canvas width and scaling.
-    * @param {number} width Canvas width.
-    * @param {number} height Canvas height.
-    */
-    resize: function(width, height) {
-    this.canvas.width = width;
-    this.canvas.height = height;
     },
     /**
     * Add a new cloud to the horizon.
