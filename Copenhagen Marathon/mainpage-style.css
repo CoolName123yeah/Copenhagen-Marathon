@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  height: 100vh;
+  background: #170a79;
+}
+
+.poster {
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Text on the signs */
+text {
+  font: 700 42px 'Montserrat', Arial, sans-serif;
+  fill: #fff;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.sign-leaderboard text { font-size: 38px; }
+
+#clock {
+  font-size: 62px;
+  fill: #170a79;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Each sign turns around the clamp that holds it on the pole */
+.sign { transform-box: view-box; }
+.sign-tracking    { transform-origin: 428px 468px; }
+.sign-leaderboard { transform-origin: 392px 712px; }
+.sign-map         { transform-origin: 478px 625px; }
+
+/* Mouse over a sign: it wiggles */
+.poster:has(#hit-tracking:hover) .sign-tracking,
+.poster:has(#hit-leaderboard:hover) .sign-leaderboard,
+.poster:has(#hit-map:hover) .sign-map {
+  animation: wiggle 0.9s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(2deg); }
+}
+
+.hit { fill: transparent; }

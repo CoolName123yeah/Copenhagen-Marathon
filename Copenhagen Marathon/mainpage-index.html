@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Copenhagen Marathon</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap">
+  <link rel="stylesheet" href="mainpage-style.css">
+</head>
+<body>
+  <svg class="poster" viewBox="0 0 896 1200">
+
+    <!-- Background: pole, title sign and clock sign -->
+    <image href="images/mainpage-background.png" width="896" height="1200"/>
+
+    <!-- Signs that move. Each one = picture + text.
+         matrix() puts the text onto the sign in perspective. -->
+    <g class="sign sign-tracking">
+      <image href="images/mainpage-tracking.png" width="896" height="1200"/>
+      <text transform="matrix(0.845 0.535 -0.161 0.986 148 249)" x="167" y="34">TRACKING</text>
+    </g>
+
+    <g class="sign sign-leaderboard">
+      <image href="images/mainpage-leaderboard.png" width="896" height="1200"/>
+      <text transform="matrix(0.879 0.477 -0.181 0.983 76 493)" x="186" y="39">LEADERBOARD</text>
+    </g>
+
+    <g class="sign sign-map">
+      <image href="images/mainpage-map.png" width="896" height="1200"/>
+      <text transform="matrix(0.963 -0.270 -0.031 0.999 497 583)" x="175" y="41">MAP</text>
+    </g>
+
+    <!-- Race clock -->
+    <text id="clock" transform="matrix(0.991 -0.130 -0.070 0.997 464 761)" x="156" y="100">10:25:40</text>
+
+    <!-- Invisible areas: mouse over them makes the sign move -->
+    <polygon id="hit-tracking" class="hit" points="150,246 428,431 421,492 135,320"/>
+    <polygon id="hit-leaderboard" class="hit" points="77,488 400,675 389,741 60,574"/>
+    <polygon id="hit-map" class="hit" points="498,585 832,487 832,572 493,663"/>
+
+  </svg>
+  <script src="mainpage-script.js"></script>
+</body>
+</html>
