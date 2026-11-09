@@ -4,6 +4,11 @@
 }
 
 @font-face {
+    font-family: BebasNeue;
+    src: url("fonts/BebasNeue-Regular.ttf")
+}
+
+@font-face {
     font-family: Montserrat-Light;
     src: url(fonts/Montserrat-Light.otf);
 }
@@ -180,7 +185,7 @@ body {
 }
 
 select {
-    font-family: Londona;
+    font-family: BebasNeue;
     font-size: 50px;
     background-color: #E73883;
     border: 2px solid #1C1682;
@@ -189,7 +194,7 @@ select {
 }
 
 option {
-    font-family: Montserrat-Medium;
+    font-family: BebasNeue;
     font-size: 30px;
     background-color: #FFE000;
     color: #1C1682;
