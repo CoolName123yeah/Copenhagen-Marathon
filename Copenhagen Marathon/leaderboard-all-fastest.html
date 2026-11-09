@@ -10,10 +10,10 @@
     <header>
     <div>
         <nav class="navbarlb">
-            <select name="GENDER">
-                <option>all</option>
-                <option>women</option>
-                <option>men</option>
+            <select name="GENDER" id="gender" onchange="goToPage()">
+                <option value="all">all</option>
+                <option value="women">women</option>
+                <option value="men">men</option>
             </select>
             <select name="YEAR">
                 <option>2026</option>
@@ -22,9 +22,9 @@
                 <option>2023</option>
                 <option>2022</option>
             </select>
-            <select name="POSITION">
-                <option>fastest</option>
-                <option>slowest</option>
+            <select name="POSITION" id="position" onchange="goToPage()">
+                <option value="fastest">fastest</option>
+                <option value="slowest">slowest</option>
             </select>
             <a href="homepage.html"><img class="bluebackbutton" src="photos/bluebackbutton.png"></a>
         </nav>
@@ -111,6 +111,6 @@
     </li>
     </ol>
     </div>
-    
+    <script src="leaderboard.js"></script>
 </body>
 </html>
