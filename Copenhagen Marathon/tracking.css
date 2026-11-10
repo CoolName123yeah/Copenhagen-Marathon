@@ -1,130 +1,172 @@
-@font-face {
-    font-family: Montserrat-Light;
-    src: url(fonts/Montserrat-Light.otf);
-}
-
-@font-face {
-    font-family: Montserrat-Medium;
-    src: url(fonts/Montserrat-Medium.otf);
-}
-
-@font-face {
-    font-family: Montserrat-Regular;
-    src: url(fonts/Montserrat-Regular.otf);
-}
-
-@font-face {
-    font-family: Montserrat-SemiBold;
-    src: url(fonts/Montserrat-SemiBold.otf);
-}
+@font-face { font-family: Montserrat-Light;    src: url(fonts/Montserrat-Light.otf); }
+@font-face { font-family: Montserrat-Medium;   src: url(fonts/Montserrat-Medium.otf); }
+@font-face { font-family: Montserrat-Regular;  src: url(fonts/Montserrat-Regular.otf); }
+@font-face { font-family: Montserrat-SemiBold; src: url(fonts/Montserrat-SemiBold.otf); }
+@font-face { font-family: "Bebas Neue"; src: url(fonts/BebasNeue-Regular.ttf); }
 
 :root {
-    font-family: Montserrat-Light;
+    --navy: #1d1687;
+    --orange: #EF6B09;
+    --pink: #fa1683;
+    --yellow: #ffde00;
+    --water: #97d0fa;
+    --ink: #e0187a;
+    --green: #19e65a;
+    --display: "Bebas Neue", "Oswald", "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    font-family: Montserrat-Light, Montserrat, system-ui, sans-serif;
 }
 
-.flex-container {
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; background: var(--navy); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+[hidden] { display: none !important; }
+
+.app { position: fixed; inset: 0; overflow: hidden; background: var(--navy); }
+
+/* ---------- Map ---------- */
+.map { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.map.dragging { cursor: grabbing; }
+
+.cls-1 { font-size: 5.88px; }
+.cls-1, .cls-2 { font-family: Montserrat-Medium, Montserrat, sans-serif; }
+.cls-1, .cls-2, .cls-3, .cls-4 { fill: #fff; }
+.cls-2 { font-size: 5.85px; }
+.cls-3 { font-family: Montserrat-Light, Montserrat, sans-serif; font-size: 5.68px; font-weight: 300; }
+.cls-1, .cls-2, .cls-3 { pointer-events: none; }
+.cls-5, .route { fill: none; stroke: var(--pink); stroke-miterlimit: 10; stroke-width: 1.96px; stroke-linejoin: round; stroke-linecap: round; }
+.route-done { fill: none; stroke: #fff; stroke-width: 1.96px; stroke-linejoin: round; stroke-linecap: round; pointer-events: none; opacity: .95; }
+.cls-6 { fill: var(--yellow); }
+.cls-8 { fill: var(--water); }
+.cls-10 { fill: var(--pink); }
+.cls-11 { fill: var(--navy); }
+.cls-7, .cls-9, .cls-16, .cls-17, .cls-18, .cls-19, .cls-20, .cls-21 { letter-spacing: 0; }
+.cls-12 { letter-spacing: -.03em; }
+.cls-13 { letter-spacing: -.02em; }
+.cls-14 { letter-spacing: -.01em; }
+.cls-15 { letter-spacing: -.04em; }
+
+/* ---------- Search ---------- */
+.search {
+    position: absolute;
+    z-index: 5;
+    top: calc(30px + var(--safe-top));
+    left: 30px;
+    width: min(400px, calc(50% - 28px));
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
+    align-items: center;
+    background: var(--yellow); border: 5px solid var(--pink);
+    border-radius: 50px;
+    padding: 0 10px 0 20px; 
+    height: clamp(80px, 12vw, 120px)
 }
-
-svg {
-    scale: 75%;
+.search input {
+    flex: 1; min-width: 0; border: 0; background: none; outline: 0;
+    font: clamp(30px, 5.5vw, 62px)/1 var(--display); 
+    letter-spacing: .02em;
+    color: var(--pink);
+    text-transform: uppercase;
 }
-
-.cls-1 {
-    font-size: 5.88px;
-}
-
-.cls-1, .cls-2 {
-    font-family: Monserrat-Light;
-    font-variation-settings: 'wght' 400;
-}
-
-.cls-1, .cls-2, .cls-3, .cls-4 {
-    fill: #fff;
-}
-
-.cls-5 {
+.search input::placeholder { color: var(--orange); opacity: .9; }
+.search:focus-within { box-shadow: 0 0 0 3px #fff; }
+.search-btn { border: 0; background: none; padding: 6px; display: grid; place-items: center; cursor: pointer; }
+.search-btn svg {
+    width: clamp(32px, 8vw, 52px);
+    height: clamp(32px, 8vw, 45px);
     fill: none;
-    stroke: #fa1683;
-    stroke-miterlimit: 10;
-    stroke-width: 1.96px;
+    stroke: var(--pink);
+    stroke-width: 3.4;
+    stroke-linecap: round;
 }
 
-.cls-6 {
-    fill: #ffde00;
+.message {
+    position: absolute; z-index: 5; margin: 0;
+    top: calc(165px + var(--safe-top)); left: 32px; max-width: calc(100% - 110px);
+    background: #fff; color: var(--navy); border-radius: 10px; padding: 8px 12px;
+    font: 13px/1.35 Montserrat-Medium, Montserrat, sans-serif;
 }
 
-.cls-2 {
-    font-size: 5.85px;
+.round-btn, .ctl, .ctl-zoom {
+    background: var(--yellow); border: 3px solid var(--pink); color: var(--pink);
+}
+.round-btn {
+    position: absolute;
+    z-index: 5;
+    top: calc(30px + var(--safe-top));
+    right: 30px;
+    width: clamp(52px, 8vw, 92px); 
+    height: clamp(52px, 8vw, 92px);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    background: var(--pink);
+    border-color: #ff6fb4;
+}
+.round-btn svg {
+    width: clamp(26px, 4vw, 58px); 
+    height: clamp(26px, 4vw, 58px);
+    fill: none;
+    stroke: var(--yellow);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round; 
 }
 
-.cls-7 {
-    letter-spacing: 0em;
+/* ---------- Controls ---------- */
+.controls {
+    position: absolute; z-index: 5; right: 30px; bottom: calc(30px + var(--safe-bottom));
+    display: flex; flex-direction: column; gap: 10px; width: 48px;
+}
+.ctl { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; cursor: pointer; padding: 0; }
+.ctl svg, .ctl-zoom svg { width: 26px; height: 26px; fill: none; stroke: var(--pink); stroke-width: 2.6; stroke-linecap: round; }
+.ctl svg .fill { fill: var(--pink); stroke: none; }
+.ctl-zoom { border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; }
+.ctl-zoom button { width: 100%; height: 48px; border: 0; background: none; display: grid; place-items: center; cursor: pointer; padding: 0; }
+.ctl-zoom button + button { border-top: 3px solid var(--pink); }
+.ctl:active, .ctl-zoom button:active, .round-btn:active { filter: brightness(.92); }
+button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+/* ---------- Position overlays ---------- */
+.viewer, .runner-dot { position: absolute; z-index: 3; left: 0; top: 0; pointer-events: none; will-change: transform; }
+.viewer { width: 0; height: 0; }
+.viewer-dot {
+    position: absolute; left: -17px; top: -17px; width: 34px; height: 34px; border-radius: 50%;
+    background: var(--pink); border: 3px solid var(--yellow);
+}
+.viewer-cone { position: absolute; left: -60px; top: -110px; width: 120px; height: 110px; transform-origin: 60px 110px; overflow: visible; }
+.runner-dot {
+    width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 0 3px rgba(255, 255, 255, .85);
+}
+.runner-dot::after {
+    content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--green);
+    animation: ping 2s ease-out infinite;
+}
+@keyframes ping { from { transform: scale(1); opacity: .9; } to { transform: scale(2.6); opacity: 0; } }
+
+/* ---------- Callout ---------- */
+.callout {
+    position: absolute; z-index: 4; left: 0; top: 0; width: 168px; height: 196px;
+    pointer-events: none; will-change: transform; transform-origin: 84px 196px;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 40, .35));
+}
+.callout-shape { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.callout-shape path { fill: var(--yellow); stroke: var(--pink); stroke-width: 10; stroke-linejoin: round; }
+.callout-photo {
+    position: absolute; left: 20px; top: 20px; width: 128px; height: 100px; border-radius: 16px; overflow: hidden;
+    background: #fff center / cover no-repeat; display: grid; place-items: center;
+    font: 56px/1 var(--display); color: #fff;
+}
+.callout-name {
+    position: absolute; left: 14px; right: 14px; top: 118px; text-align: center;
+    font: 32px/1 var(--display); letter-spacing: .02em; color: var(--ink); text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.callout-stat {
+    position: absolute; left: 0; right: 0; top: 155px; text-align: center;
+    font: 11.5px/1 Montserrat-Medium, Montserrat, sans-serif; color: var(--navy);
 }
 
-.cls-3 {
-    font-family: Montserrat-Light, Montserrat;
-    font-size: 5.68px;
-    font-variation-settings: 'wght' 300;
-    font-weight: 300;
-}
-
-.cls-8 {
-    fill: #97d0fa;
-}
-
-.cls-9 {
-    letter-spacing: 0em;
-}
-
-.cls-10 {
-    fill: #fa1683;
-}
-
-.cls-11 {
-    fill: #1d1687;
-}
-
-.cls-12 {
-    letter-spacing: -.03em;
-}
-
-.cls-13 {
-    letter-spacing: -.02em;
-}
-
-.cls-14 {
-    letter-spacing: -.01em;
-}
-
-.cls-15 {
-    letter-spacing: -.04em;
-}
-
-.cls-16 {
-    letter-spacing: 0em;
-}
-
-.cls-17 {
-    letter-spacing: 0em;
-}
-
-.cls-18 {
-    letter-spacing: 0em;
-}
-
-.cls-19 {
-    letter-spacing: 0em;
-}
-
-.cls-20 {
-    letter-spacing: 0em;
-}
-
-.cls-21 {
-    letter-spacing: 0em;
-}
+@media (prefers-reduced-motion: reduce) { .runner-dot::after { animation: none; } }
