@@ -623,6 +623,11 @@
     context.scale(ratio, ratio);
     return true;
     }
+    // Ratio is 1: clear any size left over from an earlier, higher pixel ratio
+    // (e.g. after a DevTools device change or browser zoom). A stale size
+    // would stretch the canvas out of proportion.
+    canvas.style.width = '';
+    canvas.style.height = '';
     return false;
     };
     /**

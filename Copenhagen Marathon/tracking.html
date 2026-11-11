@@ -184,12 +184,23 @@
     <div id="runnerDot" class="runner-dot" hidden></div>
 
     <div id="callout" class="callout" hidden>
-        <svg class="callout-shape" viewBox="0 0 168 196" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M10,10 H158 V134 L84,188 L10,134 Z"/>
-        </svg>
-        <div class="callout-photo" id="calloutPhoto"></div>
-        <div class="callout-name" id="calloutName"></div>
-        <div class="callout-stat" id="calloutStat"></div>
+        <div class="co-head">
+            <div class="co-photo" id="calloutPhoto"></div>
+            <div class="co-id">
+                <div class="co-name" id="calloutName"></div>
+                <div class="co-bib">Bib <span id="calloutBib"></span></div>
+            </div>
+        </div>
+        <div class="co-progress">
+            <div class="co-bar"><span id="calloutFill"></span></div>
+            <div class="co-km"><b id="calloutKm"></b><span>of 42.2 km</span></div>
+        </div>
+        <dl class="co-stats" id="calloutStats">
+            <div><dt>Time</dt><dd id="coTime"></dd></div>
+            <div><dt>Pace</dt><dd id="coPace"></dd></div>
+            <div><dt>Est. finish</dt><dd id="coFinish"></dd></div>
+        </dl>
+        <span class="co-tail" aria-hidden="true"></span>
     </div>
 
     <!-- Search -->
@@ -202,9 +213,9 @@
     </form>
     <p id="message" class="message" role="status" aria-live="polite" hidden></p>
 
-    <button type="button" id="back" class="round-btn back" aria-label="Clear search" hidden>
+    <a href="homepage.html" id="back" class="round-btn back" aria-label="Back to homepage">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7"/></svg>
-    </button>
+    </a>
 
     <!-- Map controls -->
     <div class="controls">

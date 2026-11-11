@@ -11,15 +11,17 @@
 
     /* ---------------------------------------------------------------------
      * Runner data. Replace `fetchRunner` with a call to your timing API.
-     * It must resolve to { bib, name, km, photo? } or null if not found.
+     * It must resolve to { bib, name, km, timeSec?, photo? } or null if not found.
+     * `timeSec` (elapsed race time in seconds) is optional; it adds time, pace and
+     * estimated finish to the runner card.
      * `km` is the distance covered so far along the course (0 - 42.195).
      * --------------------------------------------------------------------- */
     const DEMO_RUNNERS = {
-        '1001': { name: 'Bob',   km: 17.4 },
-        '1002': { name: 'Freja', km: 30.2 },
-        '1003': { name: 'Mads',  km: 5.8 },
-        '1004': { name: 'Ida',   km: 41.1 },
-        '1005': { name: 'Jonas', km: 0.4 },
+        '1001': { name: 'Bob',   km: 17.4, timeSec: 6110, photo: 'photos/bob.jpg' },
+        '1002': { name: 'Jamal', km: 30.2, timeSec: 10500, photo: 'photos/jamal.jpg' },
+        '1003': { name: 'Mads',  km: 5.8, timeSec: 1980, photo: 'photos/bumbo.jpg' },
+        '1004': { name: 'Tom',   km: 41.1, timeSec: 14100, photo: 'photos/tom.jpg' },
+        '1005': { name: 'Carol', km: 0.4, timeSec: 150, photo: 'photos/carol.jpg' },
     };
     const DEMO_SPEED_KM_PER_S = 0.012;   // demo only: runners creep forward so you can see live updates
 
@@ -28,7 +30,8 @@
         const r = DEMO_RUNNERS[bib];
         if (!r) return null;
         const elapsed = (performance.now() - demoStart) / 1000;
-        return { bib, name: r.name, photo: r.photo, km: Math.min(MARATHON_KM, r.km + elapsed * DEMO_SPEED_KM_PER_S) };
+        const km = Math.min(MARATHON_KM, r.km + elapsed * DEMO_SPEED_KM_PER_S);
+        return { bib, name: r.name, photo: r.photo, km, timeSec: r.timeSec + elapsed * (DEMO_SPEED_KM_PER_S * 330) };
     }
     const demoStart = performance.now();
 
@@ -38,7 +41,7 @@
     const $ = id => document.getElementById(id);
     const app = $('app'), svg = $('map'), route = $('route'), routeDone = $('routeDone');
     const viewerEl = $('viewer'), runnerDot = $('runnerDot'), callout = $('callout');
-    const form = $('searchForm'), bibInput = $('bib'), message = $('message'), backBtn = $('back');
+    const form = $('searchForm'), bibInput = $('bib'), message = $('message');
 
     /* =====================================================================
      * Route geometry: distance along the path for every km marker
@@ -198,8 +201,19 @@
         if (current) {
             const p = toScreen(current.x, current.y);
             runnerDot.style.transform = `translate(${p.x}px, ${p.y}px)`;
-            callout.style.transform = `translate(${p.x - 84}px, ${p.y - 196 - 12}px)`;
+            placeCard(p);
         }
+    }
+
+    /* Card sits above the dot; flips below it near the top edge and slides sideways to stay on screen. */
+    function placeCard(p) {
+        const w = callout.offsetWidth, h = callout.offsetHeight, gap = 18, m = 12;
+        const x = Math.min(box.width - w - m, Math.max(m, p.x - w / 2));
+        const flip = p.y - h - gap < 96;                         // 96px keeps clear of the search bar
+        const y = flip ? p.y + gap : p.y - h - gap;
+        callout.classList.toggle('below', flip);
+        callout.style.setProperty('--tail-x', `${Math.min(w - 30, Math.max(30, p.x - x))}px`);
+        callout.style.transform = `translate(${x}px, ${y}px)`;
     }
 
     /* =====================================================================
@@ -221,16 +235,34 @@
         message.textContent = text; message.hidden = !text;
     }
 
+    const pad = n => String(n).padStart(2, '0');
+    const fmtClock = s => `${Math.floor(s / 3600)}:${pad(Math.floor(s % 3600 / 60))}:${pad(Math.floor(s % 60))}`;
+    const fmtPace = s => `${Math.floor(s / 60)}:${pad(Math.round(s % 60) % 60)} /km`;
+
+    function fillCard(runner) {
+        $('calloutName').textContent = runner.name;
+        $('calloutBib').textContent = runner.bib;
+        $('calloutKm').textContent = `${runner.km.toFixed(1)} km`;
+        $('calloutFill').style.width = `${Math.min(100, runner.km / MARATHON_KM * 100)}%`;
+        const hasTime = Number.isFinite(runner.timeSec) && runner.km > 0.2;
+        $('calloutStats').hidden = !hasTime;
+        if (hasTime) {
+            const perKm = runner.timeSec / runner.km;
+            $('coTime').textContent = fmtClock(runner.timeSec);
+            $('coPace').textContent = fmtPace(perKm);
+            $('coFinish').textContent = runner.km >= MARATHON_KM ? 'Finished' : fmtClock(perKm * MARATHON_KM);
+        }
+        setPhoto(runner);
+    }
+
     function updateRunner(runner) {
         const len = lengthAtKm(runner.km);
         const p = route.getPointAtLength(len);
         current = { runner, x: p.x, y: p.y };
         routeDone.setAttribute('d', route.getAttribute('d'));
         routeDone.style.strokeDasharray = `${len} ${total}`;
-        $('calloutName').textContent = runner.name;
-        $('calloutStat').textContent = `${runner.km.toFixed(1)} km of 42.2`;
-        setPhoto(runner);
-        runnerDot.hidden = callout.hidden = backBtn.hidden = false;
+        fillCard(runner);
+        runnerDot.hidden = callout.hidden = false;
         placeOverlays();
     }
 
@@ -238,8 +270,8 @@
         if (!current) return;
         const w = fitWidth() / 1.9;
         const h = w / aspect();
-        // keep the runner a little below the middle so the callout above it fits on screen
-        flyTo(current.x, current.y - h * 0.12, w, animate ? 650 : 0);
+        // keep the runner a little below the middle so the card above it fits on screen
+        flyTo(current.x, current.y - h * 0.2, w, animate ? 650 : 0);
     }
 
     let pollTimer = 0;
@@ -261,17 +293,9 @@
         e.preventDefault();
         const bib = bibInput.value.replace(/\D/g, '');
         if (!bib) { showMessage('Enter a bib number to find a runner.'); bibInput.focus(); return; }
+        if (bib === '404') { location.href = '404.html'; return; }   // <- add this line here
         bibInput.blur();
         lookup(bib);
-    });
-
-    backBtn.addEventListener('click', () => {
-        clearInterval(pollTimer);
-        current = null;
-        runnerDot.hidden = callout.hidden = backBtn.hidden = true;
-        routeDone.style.strokeDasharray = '0 99999';
-        bibInput.value = ''; showMessage('');
-        flyTo(MAP.x + MAP.w / 2, MAP.y + MAP.h / 2, fitWidth());
     });
 
     new ResizeObserver(() => { box = app.getBoundingClientRect(); requestRender(); }).observe(app);

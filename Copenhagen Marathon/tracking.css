@@ -12,6 +12,7 @@
     --water: #97d0fa;
     --ink: #e0187a;
     --green: #19e65a;
+    --white: #ffffff;
     --display: "Bebas Neue", "Oswald", "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -103,6 +104,7 @@ html, body { height: 100%; margin: 0; background: var(--navy); }
     cursor: pointer;
     background: var(--pink);
     border-color: #ff6fb4;
+    text-decoration: none;
 }
 .round-btn svg {
     width: clamp(26px, 4vw, 58px); 
@@ -113,6 +115,9 @@ html, body { height: 100%; margin: 0; background: var(--navy); }
     stroke-linecap: round;
     stroke-linejoin: round; 
 }
+g:has(> rect.cls-6) { display: none; }
+#kmPills circle { fill: var(--yellow); }
+#kmPills .km-label { fill: var(--navy); }
 
 /* ---------- Controls ---------- */
 .controls {
@@ -146,27 +151,52 @@ button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 }
 @keyframes ping { from { transform: scale(1); opacity: .9; } to { transform: scale(2.6); opacity: 0; } }
 
-/* ---------- Callout ---------- */
+/* ---------- Runner card ---------- */
 .callout {
-    position: absolute; z-index: 4; left: 0; top: 0; width: 168px; height: 196px;
-    pointer-events: none; will-change: transform; transform-origin: 84px 196px;
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 40, .35));
+    --tail-x: 50%;
+    position: absolute; z-index: 4; left: 0; top: 0;
+    width: min(340px, calc(100vw - 24px));
+    padding: 14px 16px 16px;
+    background: var(--yellow); border: 5px solid var(--pink); border-radius: 24px;
+    color: var(--navy);
+    pointer-events: none; will-change: transform;
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 40, .4));
 }
-.callout-shape { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.callout-shape path { fill: var(--yellow); stroke: var(--pink); stroke-width: 10; stroke-linejoin: round; }
-.callout-photo {
-    position: absolute; left: 20px; top: 20px; width: 128px; height: 100px; border-radius: 16px; overflow: hidden;
-    background: #fff center / cover no-repeat; display: grid; place-items: center;
-    font: 56px/1 var(--display); color: #fff;
+.co-tail {
+    position: absolute; left: var(--tail-x); bottom: -14px; width: 22px; height: 22px; margin-left: -11px;
+    background: var(--yellow); border-right: 5px solid var(--pink); border-bottom: 5px solid var(--pink);
+    border-bottom-right-radius: 5px; transform: rotate(45deg);
 }
-.callout-name {
-    position: absolute; left: 14px; right: 14px; top: 118px; text-align: center;
-    font: 32px/1 var(--display); letter-spacing: .02em; color: var(--ink); text-transform: uppercase;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.callout.below .co-tail { bottom: auto; top: -14px; border: 0; border-left: 5px solid var(--pink); border-top: 5px solid var(--pink); border-radius: 5px 0 0 0; }
+
+.co-head { display: flex; flex-direction: column; gap: 10px; }
+.co-photo {
+    width: 100%; height: clamp(150px, 26vh, 210px); border-radius: 18px; overflow: hidden;
+    border: 3px solid var(--pink); background: #fff center top / cover no-repeat;
+    display: grid; place-items: center; font: 88px/1 var(--display); color: #fff;
 }
-.callout-stat {
-    position: absolute; left: 0; right: 0; top: 155px; text-align: center;
-    font: 11.5px/1 Montserrat-Medium, Montserrat, sans-serif; color: var(--navy);
+.co-id { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+.co-name {
+    min-width: 0; font: clamp(40px, 10vw, 52px)/.95 var(--display); letter-spacing: .02em; color: var(--pink);
+    text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.co-bib {
+    flex: none; padding: 4px 12px; border-radius: 99px;
+    background: var(--navy); color: #fff; font: 13px/1.3 Montserrat-SemiBold, Montserrat, sans-serif; letter-spacing: .02em;
+}
+
+.co-progress { margin-top: 12px; }
+.co-bar { height: 12px; border-radius: 99px; background: var(--navy); overflow: hidden; }
+.co-bar span { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--pink); }
+.co-km { display: flex; align-items: baseline; justify-content: space-between; margin-top: 6px; font: 12px/1 Montserrat-Medium, Montserrat, sans-serif; }
+.co-km b { font: 26px/1 var(--display); letter-spacing: .02em; color: var(--navy); }
+
+.co-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 0; padding-top: 10px;
+    border-top: 2px solid rgba(250, 22, 131, .45);
+}
+.co-stats[hidden] { display: none; }
+.co-stats dt { font: 11px/1.2 Montserrat-Medium, Montserrat, sans-serif; color: var(--ink); }
+.co-stats dd { margin: 2px 0 0; font: 15px/1.2 Montserrat-SemiBold, Montserrat, sans-serif; white-space: nowrap; }
 
 @media (prefers-reduced-motion: reduce) { .runner-dot::after { animation: none; } }
