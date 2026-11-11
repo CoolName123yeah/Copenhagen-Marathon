@@ -207,3 +207,93 @@ option {
 .bluebackbutton {
     height: 75px;
 }
+
+/* responsive for phones */
+
+@media (max-width: 600px) {
+    .navbarlb {
+        flex-direction: column;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    select {
+        font-size: 24px;
+        padding: 10px 20px;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    option {
+        font-size: 18px;
+    }
+
+    .bluebackbutton {
+        height: 50px;
+    }
+
+    .podium {
+        gap: 6px;
+    }
+
+    .place {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .block {
+        width: 100%;
+        padding: 15px 6px;
+        gap: 6px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+    }
+
+    .place-1 .block { height: 230px; }
+    .place-2 .block { height: 195px; }
+    .place-3 .block { height: 170px; }
+
+    .avatar1 {
+        width: 50px;
+        height: 50px;
+    }
+
+    .rank1 {
+        font-size: 18px;
+    }
+
+    .name1, .country1, .time1 {
+        font-size: 11px;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .row {
+        gap: 10px;
+        padding: 12px 15px;
+        border-radius: 25px;
+    }
+
+    .avatar {
+        width: 45px;
+        height: 45px;
+        margin: 0;
+    }
+
+    .info {
+        min-width: 0;
+    }
+
+    .name {
+        font-size: 14px;
+    }
+
+    .country {
+        font-size: 11px;
+    }
+
+    .time {
+        font-size: 14px;
+        white-space: nowrap; 
+    }
+}
