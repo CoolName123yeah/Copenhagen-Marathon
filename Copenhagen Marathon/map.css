@@ -24,15 +24,36 @@
 }
 
 :root {
-    background-color: rgba(255, 224, 1, 1); 
+    background-color: #FFE000;
+    overflow: hidden;
 }
 .map.png {
-    width: 95px;
-    height: 150px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     object-fit: cover;
     object-position: center 5%;
     margin: auto 20px;
+}
+.fullscreen {
+    height: 100dvh;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+} 
+
+.icon-wrapper {
+    position: relative;
+    height: 100%;
+    width: fit-content;
+}
+
+.map {
+    height: 100%;
+    width: auto;
+    max-width: none;
+    display: block;
+    opacity: 100%;
 }
 
 .flex-container {
@@ -49,3 +70,43 @@
     font-family: Londona, Montserrat-Regular;
     font-size: 100px;
 }
+
+.map-icon {
+    width: 3%;
+    position: absolute;
+    height: auto;
+}
+
+.location {
+    top: 45%;
+    left: 40%;
+    position: absolute;
+    height: auto;
+    width: 20%;
+}
+
+.toilet-icon1 {
+    top: 44%;
+    left: 40%;
+}
+
+.water-icon {
+ top: 40.45%;
+left: 26.74%;      
+}
+
+.monument-icon {
+    top: 52.95%;
+    left: 73.86%;
+}
+
+.food-icon {
+    top: 59.82%;
+    left: 17.66%;
+}
+
+.easter-egg-icon {
+    top: 77.10%;
+    left: 23.90%;
+}
+
