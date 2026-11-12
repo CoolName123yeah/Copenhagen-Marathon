@@ -38,7 +38,7 @@ body {
     gap: 16px 20px;
 }
 .back {
-    width: clamp(44px, 7vw, 56px);
+    width: clamp(44px, 8.45vw, 87px); /* map button: 87px at the 1032px design, scales down, 44px tap-target floor */
     aspect-ratio: 1;
     display: grid;
     place-items: center;
@@ -48,11 +48,11 @@ body {
     transition: transform .15s, background-color .15s;
 }
 .back svg {
-    width: 55%;
-    height: 55%;
+    width: 63%;
+    height: 63%;
     fill: none;
     stroke: currentColor;
-    stroke-width: 3;
+    stroke-width: 2.2;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
