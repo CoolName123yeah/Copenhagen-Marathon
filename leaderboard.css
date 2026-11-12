@@ -204,37 +204,8 @@ option {
     background-color: #E24B19;
 }
 
-/* back button – same as on the map: pink circle, white arrow;
-   hover = grows + shadow, arrow turns yellow */
 .bluebackbutton {
-    width: 75px;
     height: 75px;
-    border-radius: 50%;
-    background-color: #E73883;
-    display: grid;
-    place-items: center;
-    text-decoration: none;
-    transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
-}
-
-.bluebackbutton svg {
-    width: 63%;
-    height: 63%;
-    fill: none;
-    stroke: #FFFFFF;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: stroke .15s;
-}
-
-.bluebackbutton:hover {
-    transform: scale(1.08);
-    box-shadow: 0 10px 24px rgba(0, 0, 40, .45);
-}
-
-.bluebackbutton:hover svg {
-    stroke: #FFE001;
 }
 
 /* responsive for phones */
@@ -258,7 +229,6 @@ option {
     }
 
     .bluebackbutton {
-        width: 50px;
         height: 50px;
     }
 
