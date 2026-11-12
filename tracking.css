@@ -2,7 +2,7 @@
 @font-face { font-family: Montserrat-Medium;   src: url(fonts/Montserrat-Medium.otf); }
 @font-face { font-family: Montserrat-Regular;  src: url(fonts/Montserrat-Regular.otf); }
 @font-face { font-family: Montserrat-SemiBold; src: url(fonts/Montserrat-SemiBold.otf); }
-@font-face { font-family: "Bebas Neue"; src: url(fonts/BebasNeue-Regular.ttf); }
+/* Bebas Neue is loaded from Google Fonts in tracking.html */
 
 :root {
     --navy: #1d1687;
@@ -57,7 +57,7 @@ html, body { height: 100%; margin: 0; background: var(--navy); }
     width: min(400px, calc(50% - 28px));
     display: flex;
     align-items: center;
-    background: var(--yellow); border: 5px solid var(--pink);
+    background: var(--pink); border: 5px solid var(--pink);
     border-radius: 50px;
     padding: 0 10px 0 20px; 
     height: clamp(80px, 12vw, 120px)
@@ -66,17 +66,23 @@ html, body { height: 100%; margin: 0; background: var(--navy); }
     flex: 1; min-width: 0; border: 0; background: none; outline: 0;
     font: clamp(30px, 5.5vw, 62px)/1 var(--display); 
     letter-spacing: .02em;
-    color: var(--pink);
+    color: #fff;
     text-transform: uppercase;
+    text-align: center;
 }
-.search input::placeholder { color: var(--orange); opacity: .9; }
+.search input::placeholder { color: #fff; opacity: 1; }
 .search:focus-within { box-shadow: 0 0 0 3px #fff; }
+/* hover: the field pops out a little */
+.search { transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s; transform-origin: left center; }
+.search:hover { transform: scale(1.06); box-shadow: 0 10px 24px rgba(0, 0, 40, .45); }
+.search:focus-within:hover { box-shadow: 0 0 0 3px #fff, 0 10px 24px rgba(0, 0, 40, .45); }
+@media (prefers-reduced-motion: reduce) { .search { transition: none; } }
 .search-btn { border: 0; background: none; padding: 6px; display: grid; place-items: center; cursor: pointer; }
 .search-btn svg {
     width: clamp(32px, 8vw, 52px);
     height: clamp(32px, 8vw, 45px);
     fill: none;
-    stroke: var(--pink);
+    stroke: var(--yellow);
     stroke-width: 3.4;
     stroke-linecap: round;
 }
@@ -103,14 +109,14 @@ html, body { height: 100%; margin: 0; background: var(--navy); }
     place-items: center;
     cursor: pointer;
     background: var(--pink);
-    border-color: #ff6fb4;
+    border: 0;
     text-decoration: none;
 }
 .round-btn svg {
     width: clamp(26px, 4vw, 58px); 
     height: clamp(26px, 4vw, 58px);
     fill: none;
-    stroke: var(--yellow);
+    stroke: #fff;
     stroke-width: 2.2;
     stroke-linecap: round;
     stroke-linejoin: round; 
@@ -122,15 +128,37 @@ g:has(> rect.cls-6) { display: none; }
 /* ---------- Controls ---------- */
 .controls {
     position: absolute; z-index: 5; right: 30px; bottom: calc(30px + var(--safe-bottom));
-    display: flex; flex-direction: column; gap: 10px; width: 48px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
+/* + and − look the same as on the map page */
+.zoom-btn {
+    width: 56px; height: 56px; padding: 0; border-radius: 50%;
+    border: 3px solid #e63883; background: #080849; color: #fff;
+    font: 700 30px/1 Montserrat-SemiBold, Montserrat, Arial, sans-serif;
+    display: grid; place-items: center; cursor: pointer; transition: background .15s;
+}
+.zoom-btn:hover { background: #e63883; }
+/* locate button – same colours as + and − */
+.controls .ctl {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #080849; border: 3px solid #e63883; transition: background .15s;
+}
+.controls .ctl:hover { background: #e63883; }
+.controls .ctl svg { width: 28px; height: 28px; stroke: #fff; }
+.controls .ctl svg .fill { fill: #fff; }
 .ctl { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; cursor: pointer; padding: 0; }
 .ctl svg, .ctl-zoom svg { width: 26px; height: 26px; fill: none; stroke: var(--pink); stroke-width: 2.6; stroke-linecap: round; }
 .ctl svg .fill { fill: var(--pink); stroke: none; }
 .ctl-zoom { border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; }
 .ctl-zoom button { width: 100%; height: 48px; border: 0; background: none; display: grid; place-items: center; cursor: pointer; padding: 0; }
 .ctl-zoom button + button { border-top: 3px solid var(--pink); }
-.ctl:active, .ctl-zoom button:active, .round-btn:active { filter: brightness(.92); }
+/* back button hover: same pop-out as ENTER BIB, the colour stays pink */
+.round-btn { transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s; }
+.round-btn:hover { transform: scale(1.08); box-shadow: 0 10px 24px rgba(0, 0, 40, .45); }
+.round-btn svg { transition: stroke .15s; }
+.round-btn:hover svg { stroke: var(--yellow); }
+@media (prefers-reduced-motion: reduce) { .round-btn { transition: none; } }
+.ctl:active, .zoom-btn:active, .round-btn:active { filter: brightness(.92); }
 button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
 /* ---------- Position overlays ---------- */

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tracking</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
     <link rel="stylesheet" href="tracking.css">
 </head>
 <body>
@@ -213,7 +214,7 @@
     </form>
     <p id="message" class="message" role="status" aria-live="polite" hidden></p>
 
-    <a href="index.html" id="back" class="round-btn back" aria-label="Back to homepage">
+    <a href="mainpage-index.html" id="back" class="round-btn back" aria-label="Back to homepage">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7"/></svg>
     </a>
 
@@ -222,10 +223,8 @@
         <button type="button" id="locate" class="ctl" aria-label="Centre on runner">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5.2"/><circle cx="12" cy="12" r="1.6" class="fill"/><path d="M12 2v3.4M12 18.6V22M2 12h3.4M18.6 12H22"/></svg>
         </button>
-        <div class="ctl-zoom">
-            <button type="button" id="zoomIn" aria-label="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
-            <button type="button" id="zoomOut" aria-label="Zoom out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
-        </div>
+        <button type="button" id="zoomIn" class="zoom-btn" aria-label="Zoom in">+</button>
+        <button type="button" id="zoomOut" class="zoom-btn" aria-label="Zoom out">−</button>
     </div>
 </main>
 <script src="tracking.js"></script>
