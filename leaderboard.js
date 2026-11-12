@@ -8,7 +8,14 @@ const DATA = {
         ["Amara Dlamini", "South Africa", "2:48:36", "zendaya.jpeg"],
         ["Min-jun Seo", "South Korea", "2:52:14", "tom.jpg"],
         ["Declan Brophy", "Ireland", "2:55:58", "tom.jpg"],
-        ["Chiara Bellandi", "Italy", "2:59:41", "zendaya.jpeg"]
+        ["Chiara Bellandi", "Italy", "2:59:41", "zendaya.jpeg"],
+        ["Luca Ferrari", "Italy", "3:01:08", "tom.jpg"],
+        ["Yuki Tanaka", "Japan", "3:03:17", "zendaya.jpeg"],
+        ["Ravi Menon", "India", "3:04:23", "tom.jpg"],
+        ["Priya Nair", "India", "3:05:44", "zendaya.jpeg"],
+        ["Oskar Lindgren", "Sweden", "3:07:51", "tom.jpg"],
+        ["Elena Petrova", "Bulgaria", "3:08:02", "zendaya.jpeg"],
+        ["Mateo Silva", "Brazil", "3:10:40", "tom.jpg"]
     ],
     women: [
         ["Sofia Lindqvist", "Ireland", "2:34:12", "zendaya.jpeg"],
@@ -18,7 +25,14 @@ const DATA = {
         ["Roselyne Moore", "South Africa", "2:48:36", "zendaya.jpeg"],
         ["Anne Hale", "South Korea", "2:52:14", "zendaya.jpeg"],
         ["Caroline Duncan", "Ireland", "2:55:58", "zendaya.jpeg"],
-        ["Rose Chandler", "Italy", "2:59:41", "zendaya.jpeg"]
+        ["Rose Chandler", "Italy", "2:59:41", "zendaya.jpeg"],
+        ["Yuki Tanaka", "Japan", "3:03:17", "zendaya.jpeg"],
+        ["Priya Nair", "India", "3:05:44", "zendaya.jpeg"],
+        ["Elena Petrova", "Bulgaria", "3:08:02", "zendaya.jpeg"],
+        ["Camila Reyes", "Chile", "3:11:29", "zendaya.jpeg"],
+        ["Hannah Müller", "Germany", "3:14:55", "zendaya.jpeg"],
+        ["Ngozi Eze", "Nigeria", "3:18:36", "zendaya.jpeg"],
+        ["Freya Nilsen", "Norway", "3:22:10", "zendaya.jpeg"]
     ],
     men: [
         ["Tomás Vidal", "Spain", "2:34:12", "tom.jpg"],
@@ -28,7 +42,14 @@ const DATA = {
         ["Evan Huffman", "South Africa", "2:57:36", "tom.jpg"],
         ["Kian Tomlinson", "South Korea", "2:57:54", "tom.jpg"],
         ["Joseph Mercer", "Ireland", "2:58:58", "tom.jpg"],
-        ["Hasan Eaton", "Italy", "2:59:41", "tom.jpg"]
+        ["Hasan Eaton", "Italy", "2:59:41", "tom.jpg"],
+        ["Luca Ferrari", "Italy", "3:01:08", "tom.jpg"],
+        ["Ravi Menon", "India", "3:04:23", "tom.jpg"],
+        ["Oskar Lindgren", "Sweden", "3:07:51", "tom.jpg"],
+        ["Mateo Silva", "Brazil", "3:10:40", "tom.jpg"],
+        ["Jonas Weber", "Germany", "3:15:12", "tom.jpg"],
+        ["Kwame Mensah", "Ghana", "3:19:03", "tom.jpg"],
+        ["Henrik Dahl", "Norway", "3:23:47", "tom.jpg"]
     ]
 };
 
