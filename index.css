@@ -5,6 +5,12 @@ body {
   background: color(display-p3 0.11 0.086 0.502); /* same blue as the picture */
 }
 
+/* Sky behind the graffiti: same blue as the body */
+.sky {
+  fill: #1c1680;
+  fill: color(display-p3 0.11 0.086 0.502);
+}
+
 .poster {
   display: block;
   height: 100%;
@@ -70,4 +76,61 @@ text {
 .hit {
   fill: transparent;
   cursor: pointer;
+}
+
+/* "KBH" graffiti: every stroke line in the mask draws itself,
+   --start = when it begins, --time = how long it takes */
+#spray-mask .stroke {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 53;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;   /* hidden until its turn comes */
+  animation: spray var(--time) linear var(--start) forwards;
+}
+
+#spray-mask .mist {
+  fill: #fff;
+  opacity: 0;
+  animation: mist 0.3s ease-out var(--start) forwards;
+}
+
+/* Wiping the graffiti away: a rag (thick black line in the mask) goes over it
+   in a zigzag, and the paint smears and blurs while it is being wiped */
+#spray-mask .wipe {
+  fill: none;
+  stroke: #000;
+  stroke-width: 95;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+#spray-mask.wiping .wipe {
+  animation: wipe 2s ease-in-out forwards;
+}
+@keyframes wipe {
+  from { opacity: 1; }
+  to   { opacity: 1; stroke-dashoffset: 0; }
+}
+
+#graffiti.smudge {
+  filter: blur(4px);
+  transform: translate(18px, 6px);
+  transition: filter 2s ease-in, transform 2s ease-in;
+}
+
+@keyframes spray {
+  from { opacity: 1; }
+  to   { opacity: 1; stroke-dashoffset: 0; }
+}
+@keyframes mist  { to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  #spray-mask .stroke { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  #spray-mask .mist   { animation: none; opacity: 1; }
 }
