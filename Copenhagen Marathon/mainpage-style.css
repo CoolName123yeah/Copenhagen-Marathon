@@ -1,7 +1,8 @@
 body {
   margin: 0;
   height: 100vh;
-  background: #170a79;
+  background: #1c1680;
+  background: color(display-p3 0.11 0.086 0.502); /* same blue as the picture */
 }
 
 .poster {
@@ -13,36 +14,54 @@ body {
 
 /* Text on the signs */
 text {
-  font: 700 42px 'Montserrat', Arial, sans-serif;
+  font: 600 46px 'Montserrat', Arial, sans-serif;
   fill: #fff;
   text-anchor: middle;
   dominant-baseline: central;
 }
 
-.sign-leaderboard text { font-size: 38px; }
+.sign-leaderboard text { font-size: 42px; }
+
 
 #clock {
-  font-size: 62px;
-  fill: #170a79;
+  font-size: 80px;
+  fill: #fff;
   font-variant-numeric: tabular-nums;
 }
 
-/* Each sign turns around the clamp that holds it on the pole */
-.sign { transform-box: view-box; }
-.sign-tracking    { transform-origin: 428px 468px; }
-.sign-leaderboard { transform-origin: 392px 712px; }
-.sign-map         { transform-origin: 478px 625px; }
+/* Each sign turns around the clamp that holds it on the pole
+   and sways all the time, each one at its own speed */
+.sign {
+  transform-box: view-box;
+  animation: sway 3s ease-in-out infinite alternate;
+  transition: filter 0.2s;
+}
+.sign-tracking    { transform-origin: 490px 527px; animation-duration: 3.2s; }
+.sign-map         { transform-origin: 473px 667px; animation-duration: 2.7s; animation-delay: -1s; }
+.sign-leaderboard { transform-origin: 453px 813px; animation-duration: 3.6s; animation-delay: -2s; }
 
-/* Mouse over a sign: it wiggles */
+@keyframes sway {
+  from { transform: rotate(-2.5deg); }
+  to   { transform: rotate(2.5deg); }
+}
+
+/* Mouse over a sign: it lights up, grows a little and wiggles,
+   so it is clear you can click it */
 .poster:has(#hit-tracking:hover) .sign-tracking,
-.poster:has(#hit-leaderboard:hover) .sign-leaderboard,
-.poster:has(#hit-map:hover) .sign-map {
-  animation: wiggle 0.9s ease-in-out infinite;
+.poster:has(#hit-map:hover) .sign-map,
+.poster:has(#hit-leaderboard:hover) .sign-leaderboard {
+  animation: wiggle 0.8s ease-in-out infinite;
+  filter: brightness(1.15) drop-shadow(0 0 12px rgba(255, 255, 255, 0.7));
 }
 
 @keyframes wiggle {
-  25% { transform: rotate(-3deg); }
-  75% { transform: rotate(2deg); }
+  0%, 100% { transform: rotate(0deg) scale(1.05); }
+  25%      { transform: rotate(-4deg) scale(1.05); }
+  75%      { transform: rotate(3deg) scale(1.05); }
 }
 
-.hit { fill: transparent; }
+/* Invisible areas over the signs: hand cursor = clickable */
+.hit {
+  fill: transparent;
+  cursor: pointer;
+}
