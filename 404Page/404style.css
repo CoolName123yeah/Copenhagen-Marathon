@@ -1,0 +1,118 @@
+@font-face {
+  font-family: Montserrat-Medium;
+  src: url(../fonts/Montserrat-Medium.otf);
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat-SemiBold;
+  src: url(../fonts/Montserrat-SemiBold.otf);
+  font-display: swap;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: #f7f7f7;
+  color: #585858;
+  font-size: 125%;
+}
+
+/* The "404 / page not found" text block */
+.interstitial-wrapper {
+  box-sizing: border-box;
+  font-size: 1em;
+  line-height: 1.6em;
+  margin: clamp(10px, 35vh, 350px) auto 0; /* scales with window height */
+  max-width: 800px;
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .interstitial-wrapper {
+    padding: 0 10%;
+  }
+}
+
+@media (max-height: 600px) {
+  .interstitial-wrapper {
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 400px) {
+  .interstitial-wrapper {
+    padding: 0 5%;
+  }
+}
+
+@media (max-height: 350px) {
+  .interstitial-wrapper {
+    margin-top: 5%;
+  }
+}
+
+/* Holds the game's image and sound resources; never shown */
+#offline-resources {
+  display: none;
+}
+
+/* Game sits at the bottom of the window and scales from its bottom-centre,
+   so it follows the window when it is resized. */
+#game {
+  position: fixed;
+  left: 50%;
+  bottom: 15vh;
+  width: 600px;
+  height: 150px;
+  transform-origin: bottom center;
+}
+
+#game canvas {
+  display: block;
+  image-rendering: pixelated;  /* keeps the sprites crisp when scaled up */
+}
+
+/* Back button in the top-right corner; its size follows the window width. */
+#back-button {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  width: clamp(56px, 7vw, 76px);
+  height: clamp(56px, 7vw, 76px);
+  z-index: 10;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+#back-button svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#back-button:hover {
+  transform: scale(1.08);
+  opacity: 0.85;
+}
+
+#back-button:focus-visible {
+  outline: 3px solid rgb(76, 142, 250);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+/* Small picture in the bottom-right corner; its size follows the window width. */
+#corner-cat {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  width: clamp(36px, 5vw, 80px);
+  height: auto;
+  border-radius: 6px;
+  pointer-events: none;   /* clicks go through to the game */
+  z-index: 5;
+}
