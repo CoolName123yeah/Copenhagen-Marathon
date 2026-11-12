@@ -74,7 +74,7 @@ html, body { height: 100%; margin: 0; background: var(--navy); }
 .search:focus-within { box-shadow: 0 0 0 3px #fff; }
 /* hover: the field pops out a little */
 .search { transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s; transform-origin: left center; }
-.search:hover { transform: scale(1.06); box-shadow: 0 10px 24px rgba(0, 0, 40, .45); }
+.search:hover { transform: scale(1.06); }
 .search:focus-within:hover { box-shadow: 0 0 0 3px #fff, 0 10px 24px rgba(0, 0, 40, .45); }
 @media (prefers-reduced-motion: reduce) { .search { transition: none; } }
 .search-btn { border: 0; background: none; padding: 6px; display: grid; place-items: center; cursor: pointer; }
@@ -154,7 +154,7 @@ g:has(> rect.cls-6) { display: none; }
 .ctl-zoom button + button { border-top: 3px solid var(--pink); }
 /* back button hover: same pop-out as ENTER BIB, the colour stays pink */
 .round-btn { transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s; }
-.round-btn:hover { transform: scale(1.08); box-shadow: 0 10px 24px rgba(0, 0, 40, .45); }
+.round-btn:hover { transform: scale(1.08); }
 .round-btn svg { transition: stroke .15s; }
 .round-btn:hover svg { stroke: var(--yellow); }
 @media (prefers-reduced-motion: reduce) { .round-btn { transition: none; } }

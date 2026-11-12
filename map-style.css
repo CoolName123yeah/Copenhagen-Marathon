@@ -34,7 +34,7 @@ body{background:var(--bg);font-family:'Montserrat',Arial,sans-serif;color:var(--
 
 /* back button hover: pops out with a shadow, colour stays pink */
 #backBtn{transform-box:fill-box;transform-origin:center;transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s}
-#backBtn:hover{transform:scale(1.08);filter:drop-shadow(0 10px 12px rgba(0,0,40,.45))}
+#backBtn:hover{transform:scale(1.08);}
 #backBtn path{transition:stroke .15s}
 #backBtn:hover path{stroke:#ffde00}
 .chip-bg{fill:var(--bg-dark);stroke:var(--pink);stroke-width:2;transition:fill .15s}
