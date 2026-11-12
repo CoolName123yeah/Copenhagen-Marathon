@@ -33,12 +33,12 @@ body {
     margin: 0 auto;
     padding: 28px 24px 8px;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto;
     align-items: center;
     gap: 16px 20px;
 }
 .back img { height: 56px; display: block; transition: transform .15s; }
-.back:hover img { transform: translateX(-3px); }
+.back:hover img { transform: translateX(3px); }
 h1 {
     font-family: var(--display);
     font-weight: normal;
