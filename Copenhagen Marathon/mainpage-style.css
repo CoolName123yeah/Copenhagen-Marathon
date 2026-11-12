@@ -20,6 +20,12 @@ text {
   dominant-baseline: central;
 }
 
+/* Dark blue text on the three signs on the left */
+.sign text {
+  fill: #1c1680;
+  fill: color(display-p3 0.11 0.086 0.502);
+}
+
 .sign-leaderboard text { font-size: 42px; }
 
 
