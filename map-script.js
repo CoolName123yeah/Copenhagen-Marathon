@@ -236,7 +236,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (view.s !== 1) return animateTo({x: 0, y: 0, s: 1});
     window.location.href = 'mainpage-index.html';
   }
-  onKey($('backBtn'), goBack);
+  // the back arrow is a normal link to mainpage-index.html; Esc still closes the card / resets the zoom
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') goBack();
     if (e.key === '+' || e.key === '=') $('zin').click();
