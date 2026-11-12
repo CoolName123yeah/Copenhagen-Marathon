@@ -104,6 +104,14 @@
         <circle class="here-pulse" r="17" fill="#e63883"/>
         <circle r="17" fill="#d4487f" stroke="#ffe000" stroke-width="5"/>
       </g>
+      <g id="runner" class="hidden">
+        <circle class="runner-pulse" r="14" fill="#ffe000"/>
+        <circle r="13" fill="#ffe000" stroke="#080849" stroke-width="4"/>
+        <g transform="translate(0 -40)">
+          <rect x="-42" y="-16" width="84" height="30" rx="15" fill="#ffe000" stroke="#080849" stroke-width="3"/>
+          <text id="runnerLabel" style="font:700 14px 'Montserrat',Arial,sans-serif;fill:#080849;text-anchor:middle;dominant-baseline:central">BIB</text>
+        </g>
+      </g>
       <g id="metro"></g>
       <g id="kms"></g>
       <g id="start" class="km">
@@ -118,10 +126,18 @@
 
   <!-- INTERFACE (stays in place, drawn exactly like the design) -->
   <svg id="ui" viewBox="0 0 1032 1376">
-    <a href="mainpage-index.html" id="backBtn" class="btn" role="button" tabindex="0" aria-label="Back to homepage">
+       <a id="backBtn" class="btn" href="mainpage-index.html" aria-label="Back">
       <circle cx="100.5" cy="101.3" r="43.58" fill="#e63883"/>
-      <!-- same arrow as on the tracking page -->
-      <path d="M20 12H5M11 5l-7 7 7 7" transform="translate(73 73.8) scale(2.29)" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="#fff">    <path d="M87.79,74.14c-5.19,4.74-10.38,9.48-15.57,14.22-.74.67-1.48,1.35-2.22,2.02-.88.8-.81,2.3,0,3.11,4.85,4.85,9.69,9.69,14.54,14.54l2.09,2.09c2.01,2.01,5.12-1.11,3.11-3.11-4.85-4.85-9.69-9.69-14.54-14.54l-2.09-2.09v3.11c5.19-4.740,10.38-9.48,15.57-14.22.74-.67,1.48-1.35,2.22-2.020,2.1-1.91-1.02-5.02-3.11-3.11h0Z"/>
+    <path d="M76.24,94.26c6.99-2.26,14.11-2.23,21.14-.14,2.91.87,5.82,2.16,7.82,4.52.47.56.86,1.19,1.19,1.84.05.1.1.2.15.31.04.09.32.73.17.36.48,1.17.88,2.44.91,3.72s-.35,2.45-1.55,3.07c-1.26.66-2.84.65-4.15.13s-2.3-1.71-2.7-3.08c-.19-.63-.25-1.27-.12-1.92.1-.51.36-.84.56-1.06,1.51-1.6,4.26-2.41,6.69-2.61,3.16-.26,6.45.21,9.21,1.84,7.15,4.21,7.14,14.27,3.89,20.93-1.24,2.54,2.56,4.77,3.8,2.22,3.96-8.12,4.07-19.44-3.53-25.58-3.35-2.7-7.66-3.92-11.93-3.88-3.72.03-7.8.94-10.68,3.42-3.3,2.86-3.04,7.72-.5,11,2.75,3.57,8.43,4.67,12.21,2.04s3.69-7.35,2.21-11.22c-1.35-3.52-3.81-6.29-7.12-8.12-4.01-2.21-8.84-3.330-13.36-3.81-5.2-.55-10.52.16-15.49,1.77-2.68.87-1.54,5.12,1.17,4.24h0Z"/></g>
+    </a>
+    <g id="bibBtn" class="btn" role="button" tabindex="0" aria-label="Enter bib number">
+      <rect x="171.97" y="57.46" width="304.51" height="85.68" rx="42.84" fill="#e63883"/>
+      <text id="bibBtnLabel" x="252.94" y="112.85" style="font:600 33.81px 'Montserrat',Arial,sans-serif;fill:#fff">ENTER BIB</text>
+      <g fill="#fff">      <g>
+        <path d="M224.47,94.86c-.06,4.16-2.58,8.02-6.52,9.5s-8.7.31-11.49-3.02-3.05-7.99-.93-11.61,6.5-5.72,10.67-4.86c4.79.98,8.21,5.1,8.27,10,.04,3.14,4.93,3.15,4.89,0-.09-6.35-4.01-11.94-9.96-14.16s-12.71-.3-16.61,4.47-4.72,11.93-1.41,17.43,9.71,8.2,15.94,7.01c6.99-1.33,11.93-7.75,12.03-14.75.04-3.15-4.85-3.15-4.89,0Z"/>
+        <path d="M222.13,105.42l14.53,14.53,2.07,2.07c.93.93,2.52.93,3.46,0s.94-2.52,0-3.46l-14.53-14.53-2.07-2.07c-.93-.93-2.52-.93-3.46,0s-.94,2.52,0,3.46h0Z"/>
+      </g></g>
     </g>
     <path id="sheet" d="M59.23,1186.54h911.33c34.22,0,62,27.78,62,62v136.19H-2.77v-136.19c0-34.22,27.78-62,62-62Z" fill="#080849"/>
     <text x="32.29" y="1257.72" style="font:600 48px 'Montserrat',Arial,sans-serif;fill:#fff">Show on map</text>
@@ -143,9 +159,6 @@
   </svg>
 
   <div class="zoom">
-    <button id="locate" aria-label="Show where I am">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5.2"/><circle cx="12" cy="12" r="1.6" class="fill"/><path d="M12 2v3.4M12 18.6V22M2 12h3.4M18.6 12H22"/></svg>
-    </button>
     <button id="zin" aria-label="Zoom in">+</button>
     <button id="zout" aria-label="Zoom out">−</button>
   </div>
@@ -155,7 +168,20 @@
     <div id="cardBody"></div>
   </div>
 
+  <div class="modal" id="modal">
+    <form id="bibForm" autocomplete="off">
+      <h3>Track a runner</h3>
+      <p>Enter the bib number to see where the runner is on the course.</p>
+      <div class="field">
+        <input id="bibInput" inputmode="numeric" maxlength="5" placeholder="e.g. 1234" aria-label="Bib number">
+        <button class="go" type="submit">Find</button>
+      </div>
+      <div class="err" id="bibErr"></div>
+      <button class="cancel" type="button" id="bibCancel">Cancel</button>
+    </form>
+  </div>
 </div>
+<script src="map-data.js"></script>
 <script src="map-script.js"></script>
 </body>
 </html>
